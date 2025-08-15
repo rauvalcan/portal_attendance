@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 1. ACCIÓN DE VENTANA -->
+    <!-- Define qué modelo y vistas se mostrarán al hacer clic en el menú. -->
+    <record id="action_portal_attendance" model="ir.actions.act_window">
+        <field name="name">Mis Asistencias</field>
+        <field name="res_model">hr.attendance</field>
+        <field name="view_mode">tree,form</field>
+        <!-- Referencia a la vista árbol personalizada para el portal -->
+        <field name="view_id" ref="view_hr_attendance_tree_portal"/>
+        <field name="context">{}</field>
+        <!-- Dominio de seguridad: solo muestra asistencias del empleado cuyo usuario es el actual -->
+        <field name="domain">[('employee_id.user_id', '=', user.id)]</field>
+        <field name="target">current</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aún no tienes registros de asistencia.
+            </p><p>
+                Aquí aparecerán todas tus entradas y salidas registradas en el sistema.
+            </p>
+        </field>
+    </record>
+
+    <!-- 2. VISTA ÁRBOL (LISTA) PERSONALIZADA PARA EL PORTAL -->
+    <!-- Define las columnas que verá el usuario del portal. -->
+    <record id="view_hr_attendance_tree_portal" model="ir.ui.view">
+        <field name="name">hr.attendance.tree.portal</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <tree string="Asistencias" create="false" edit="false" delete="false">
+                <field name="check_in"/>
+                <field name="check_out"/>
+                <field name="worked_hours" string="Horas Trabajadas"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- 3. ELEMENTO DE MENÚ EN EL PORTAL -->
+    <!-- Crea el enlace en el menú del portal que dispara la acción anterior. -->
+    <menuitem
+        id="menu_portal_attendance"
+        name="Mis Asistencias"
+        parent="portal.portal_my_home"
+        action="action_portal_attendance"
+        sequence="20"
+        groups="base.group_portal"/>
+
+</odoo>
